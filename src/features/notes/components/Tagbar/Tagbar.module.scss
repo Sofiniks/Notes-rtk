@@ -1,0 +1,20 @@
+@use '../../../../styles/variables.scss';
+.tagbar {
+    display: flex;
+    gap: 20px;
+}
+
+.tag {
+    background-color: variables.$primary-blue;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    &.shopping {
+        background-color: variables.$purple;
+    }
+
+    &.business {
+        background-color: variables.$orange;
+    }
+}

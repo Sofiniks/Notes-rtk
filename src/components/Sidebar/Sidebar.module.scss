@@ -1,0 +1,39 @@
+@use '../../styles/variables.scss';
+
+.sidebar {
+    background-color: #fffcfc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+}
+
+.sidebarItem {
+    display: flex;
+    gap: 10px;
+    padding: 7px 10px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+        transition: all 0.3s;
+        .icon,
+        .label {
+            transition: all 0.3s;
+            color: variables.$primary-blue;
+        }
+    }
+}
+
+.searchInput {
+    margin-bottom: 20px;
+
+    input {
+        border: 1px solid rgb(200, 200, 200);
+        border-radius: 10px;
+        padding: 5px 10px;
+    }
+}
+
+.icon.active,
+.label.active {
+    color: variables.$primary-blue;
+}

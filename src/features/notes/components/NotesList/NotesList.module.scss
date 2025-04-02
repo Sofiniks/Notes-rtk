@@ -1,0 +1,16 @@
+.notesList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.emptyState {
+    background-color: #fff;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+        font-size: 20px;
+    }
+}

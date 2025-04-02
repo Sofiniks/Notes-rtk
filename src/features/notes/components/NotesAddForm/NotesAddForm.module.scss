@@ -1,0 +1,36 @@
+.addForm {
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    input,
+    textArea,
+    select {
+        background-color: white;
+        border: 1px solid rgb(238, 238, 238);
+        padding: 10px;
+    }
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.saveButton,
+.cancelButton {
+    border: none;
+    border-radius: 4px;
+    padding: 5px 20px;
+    color: #515151;
+    background-color: rgb(234, 234, 234);
+    cursor: pointer;
+}
+
+.saveButton {
+    background-color: #cc85ff;
+    color: white;
+}

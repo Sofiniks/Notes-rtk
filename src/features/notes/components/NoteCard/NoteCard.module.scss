@@ -1,0 +1,39 @@
+@use '../../../../styles/variables.scss';
+
+.noteCard {
+    background-color: #fff;
+    border-left: 15px solid variables.$primary-blue;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+        transform: scale(1.01);
+    }
+    &.shopping {
+        border-color: variables.$purple;
+    }
+
+    &.business {
+        border-color: variables.$orange;
+    }
+}
+
+.noteCardHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.heading {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.noteText {
+    color: #404040;
+    max-width: 90%;
+}

@@ -1,0 +1,17 @@
+.layout {
+    display: flex;
+    align-items: flex-start;
+}
+
+.mainContent {
+    padding: 50px;
+    background-color: #f6f3f3;
+    flex: 1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}

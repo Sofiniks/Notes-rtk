@@ -1,0 +1,19 @@
+@use '../../../styles/variables.scss';
+
+.iconButton {
+    background-color: variables.$primary-blue;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+        background-color: #74e9f9;
+    }
+}
+
+.icon {
+    color: #fff;
+}
