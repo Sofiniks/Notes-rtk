@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import styles from './Sidebar.module.scss';
 import {
     exitEditMode,
-    setCategoryFilter,
     setSectionFilter,
     toggleAddNoteMode,
     setSearchQuery,
+    resetCategoryFilters,
 } from '../../features/notes/notesSlice';
 import { SectionFilter } from '../../features/notes/types';
 import { selectNotesSection, selectSearchQuery } from '../../features/notes/notesSelectors';
@@ -35,7 +35,7 @@ const Sidebar = () => {
     const handleSelectSection = (section: SectionFilter) => {
         dispatch(toggleAddNoteMode(false));
         dispatch(exitEditMode());
-        dispatch(setCategoryFilter('all'));
+        dispatch(resetCategoryFilters());
         dispatch(setSectionFilter(section));
     };
 

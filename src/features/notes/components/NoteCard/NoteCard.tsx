@@ -1,9 +1,8 @@
 import styles from './NoteCard.module.scss';
-import { useAppSelector } from '../../../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../../app/hooks';
 import { Note, SectionFilter } from '../../types';
 import { SECTION_FILTERS } from '../../constants';
 import IconButton from '../../../../components/ui/IconButton/IconButton';
-import { useAppDispatch } from '../../../../app/hooks';
 import { moveToTrash, toggleFavorite, deleteNote, setEditMode } from '../../notesSlice';
 import { selectNotesSection } from '../../notesSelectors';
 
@@ -30,10 +29,7 @@ const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
     };
 
     return (
-        <div
-            className={`${styles.noteCard} ${styles[category || 'other']}`}
-            onClick={() => dispatch(setEditMode(id))}
-        >
+        <div className={styles.noteCard} onClick={() => dispatch(setEditMode(id))}>
             <div className={styles.noteCardHeader}>
                 <h4 className={styles.heading}>{heading}</h4>
                 <div className={styles.actionButtons}>

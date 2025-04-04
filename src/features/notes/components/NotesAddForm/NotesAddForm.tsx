@@ -10,7 +10,7 @@ const NotesAddForm = () => {
         id: '',
         heading: '',
         text: '',
-        category: 'other',
+        category: [],
     });
 
     const handleChange = (
@@ -23,6 +23,18 @@ const NotesAddForm = () => {
         }));
     };
 
+    const handleCategoryToggle = (value: CategoryFilter) => {
+        setForm((prev) => {
+            const alreadySelected = prev.category?.includes(value);
+            return {
+                ...prev,
+                category: alreadySelected
+                    ? (prev.category || []).filter((item) => item !== value)
+                    : [...(prev.category || []), value],
+            };
+        });
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -30,7 +42,7 @@ const NotesAddForm = () => {
             id: Date.now().toString(),
             heading: form.heading,
             text: form.text,
-            category: form.category as CategoryFilter,
+            category: form.category as CategoryFilter[],
             isFavorite: false,
         };
         dispatch(addNote(newNote));
@@ -53,11 +65,18 @@ const NotesAddForm = () => {
                     onChange={handleChange}
                     placeholder="Note..."
                 />
-                <select name="category" value={form.category} onChange={handleChange}>
-                    <option value="shopping">Shopping</option>
-                    <option value="business">Business</option>
-                    <option value="other">Other things</option>
-                </select>
+                <div className={styles.tagsContainer}>
+                    {(['shopping', 'business', 'other'] as CategoryFilter[]).map((item) => (
+                        <div
+                            key={item}
+                            className={`${styles.tag} ${styles[item]} ${form.category?.includes(item) ? styles.active : ''}`}
+                            onClick={() => handleCategoryToggle(item)}
+                        >
+                            {item}
+                        </div>
+                    ))}
+                </div>
+
                 <div className={styles.buttonContainer}>
                     <button type="submit" className={styles.saveButton}>
                         Save

@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { CategoryFilter } from './types';
 
 export const selectAllNotes = (state: RootState) => state.notes.notes;
 
@@ -19,8 +20,10 @@ export const selectVisibleNotes = createSelector(
             visibleNotes = visibleNotes.filter((note) => note.isFavorite);
         }
 
-        if (categoryFilter !== 'all') {
-            visibleNotes = visibleNotes.filter((note) => note.category === categoryFilter);
+        if (categoryFilter.length > 0) {
+            visibleNotes = visibleNotes.filter((note) =>
+                categoryFilter.some((filter) => note.category?.includes(filter)),
+            );
         }
 
         if (searchQuery) {
@@ -44,3 +47,4 @@ export const selectNotesSection = (state: RootState) => state.notes.sectionFilte
 export const selectIsAddingMode = (state: RootState) => state.notes.isAdding;
 export const selectIsEditMode = (state: RootState) => state.notes.isEdit;
 export const selectSearchQuery = (state: RootState) => state.notes.searchQuery;
+export const selectedCategoryFilter = (state: RootState) => state.notes.categoryFilter;

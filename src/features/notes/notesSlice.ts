@@ -7,7 +7,7 @@ interface NotesState {
     notes: Note[];
     trash: Note[];
     sectionFilter: SectionFilter;
-    categoryFilter: CategoryFilter;
+    categoryFilter: CategoryFilter[];
     isAdding: boolean;
     isEdit: boolean;
     editingNoteId: string | null;
@@ -16,7 +16,7 @@ interface NotesState {
 export const initialState: NotesState = {
     notes: notesData,
     sectionFilter: 'all',
-    categoryFilter: 'all',
+    categoryFilter: [],
     trash: [],
     isAdding: false,
     isEdit: false,
@@ -40,8 +40,13 @@ export const notesSlice = createSlice({
         setSectionFilter: (state, action: PayloadAction<SectionFilter>) => {
             state.sectionFilter = action.payload;
         },
-        setCategoryFilter: (state, action: PayloadAction<CategoryFilter>) => {
-            state.categoryFilter = action.payload;
+        toggleCategoryFilter: (state, action: PayloadAction<CategoryFilter>) => {
+            const category = action.payload;
+            if (state.categoryFilter.includes(category)) {
+                state.categoryFilter = state.categoryFilter.filter((cat) => cat !== category);
+            } else {
+                state.categoryFilter.push(category);
+            }
         },
         moveToTrash: (state, action: PayloadAction<string>) => {
             const noteId = action.payload;
@@ -76,6 +81,9 @@ export const notesSlice = createSlice({
         setSearchQuery: (state, action: PayloadAction<string>) => {
             state.searchQuery = action.payload;
         },
+        resetCategoryFilters: (state) => {
+            state.categoryFilter = [];
+        },
     },
 });
 
@@ -83,7 +91,7 @@ export const {
     addNote,
     toggleFavorite,
     setSectionFilter,
-    setCategoryFilter,
+    toggleCategoryFilter,
     moveToTrash,
     deleteNote,
     toggleAddNoteMode,
@@ -91,6 +99,7 @@ export const {
     exitEditMode,
     updateNote,
     setSearchQuery,
+    resetCategoryFilters,
 } = notesSlice.actions;
 
 export default notesSlice.reducer;

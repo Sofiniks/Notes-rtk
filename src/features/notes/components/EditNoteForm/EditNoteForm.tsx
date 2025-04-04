@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import styles from './EditNoteForm.module.scss';
-import { Note } from '../../types';
+import { Note, CategoryFilter } from '../../types';
 import { exitEditMode, updateNote } from '../../notesSlice';
 import { selectEditingNoteId, selectNoteById } from '../../notesSelectors';
 
@@ -13,7 +13,7 @@ const NotesEditForm = () => {
         id: '',
         heading: '',
         text: '',
-        category: 'other',
+        category: [],
     });
     if (editingNoteId) {
         editingNote = useAppSelector(selectNoteById(editingNoteId));
@@ -34,6 +34,18 @@ const NotesEditForm = () => {
             ...prevForm,
             [name]: value,
         }));
+    };
+
+    const handleCategoryToggle = (value: CategoryFilter) => {
+        setForm((prev) => {
+            const alreadySelected = prev.category?.includes(value);
+            return {
+                ...prev,
+                category: alreadySelected
+                    ? (prev.category || []).filter((item) => item !== value)
+                    : [...(prev.category || []), value],
+            };
+        });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -59,11 +71,17 @@ const NotesEditForm = () => {
                     onChange={handleChange}
                     placeholder="Note..."
                 />
-                <select name="category" value={form.category} onChange={handleChange}>
-                    <option value="shopping">Shopping</option>
-                    <option value="business">Business</option>
-                    <option value="other">Other things</option>
-                </select>
+                <div className={styles.tagsContainer}>
+                    {(['shopping', 'business', 'other'] as string[]).map((item) => (
+                        <div
+                            key={item}
+                            className={`${styles.tag} ${styles[item]} ${form.category?.includes(item) ? styles.active : ''}`}
+                            onClick={() => handleCategoryToggle(item as CategoryFilter)}
+                        >
+                            {item}
+                        </div>
+                    ))}
+                </div>
                 <div className={styles.buttonContainer}>
                     <button type="submit" className={styles.saveButton}>
                         Save
