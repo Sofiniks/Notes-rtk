@@ -5,6 +5,7 @@ import { SECTION_FILTERS } from '../../constants';
 import IconButton from '../../../../components/ui/IconButton/IconButton';
 import { moveToTrash, toggleFavorite, deleteNote, setEditMode } from '../../notesSlice';
 import { selectNotesSection } from '../../notesSelectors';
+import { getStripeBackground } from '../../utils';
 
 const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
     const dispatch = useAppDispatch();
@@ -29,7 +30,13 @@ const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
     };
 
     return (
-        <div className={styles.noteCard} onClick={() => dispatch(setEditMode(id))}>
+        <div
+            className={styles.noteCard}
+            onClick={() => dispatch(setEditMode(id))}
+            style={{
+                ['--tag-stripe' as any]: getStripeBackground(category || []),
+            }}
+        >
             <div className={styles.noteCardHeader}>
                 <h4 className={styles.heading}>{heading}</h4>
                 <div className={styles.actionButtons}>

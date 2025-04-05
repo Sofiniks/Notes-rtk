@@ -1,5 +1,3 @@
-@use '../../../../styles/variables.scss';
-
 .noteCard {
     position: relative;
     background-color: #fff;
@@ -17,7 +15,8 @@
         left: 0;
         top: 0;
         height: 100%;
-        border: 5px solid variables.$primary-blue;
+        width: 8px;
+        background: var(--tag-stripe, #ccc);
     }
 }
 
