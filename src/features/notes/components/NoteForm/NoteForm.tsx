@@ -1,34 +1,30 @@
 import { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
-import styles from './EditNoteForm.module.scss';
+import styles from './NoteForm.module.scss';
 import { Note, CategoryFilter } from '../../types';
-import { setMode, updateNote } from '../../notesSlice';
-import { selectEditingNoteId, selectNoteById } from '../../notesSelectors';
 
-const NotesEditForm = () => {
-    const dispatch = useAppDispatch();
-    const editingNoteId = useAppSelector(selectEditingNoteId);
-    let editingNote: Note | undefined;
+type NoteFormProps = {
+    mode: 'add' | 'edit';
+    initialData?: Note;
+    onSubmit: (note: Note) => void;
+    onCancel: () => void;
+};
+
+const NoteForm = ({ mode, initialData, onSubmit, onCancel }: NoteFormProps) => {
     const [form, setForm] = useState<Note>({
         id: '',
         heading: '',
         text: '',
         category: [],
+        isFavorite: false,
     });
-    if (editingNoteId) {
-        editingNote = useAppSelector(selectNoteById(editingNoteId));
-    }
 
     useEffect(() => {
-        if (editingNote) {
-            const { id, heading, text, category } = editingNote;
-            setForm({ id, heading, text, category });
+        if (mode === 'edit' && initialData) {
+            setForm(initialData);
         }
-    }, [editingNote]);
+    }, [mode, initialData]);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setForm((prevForm) => ({
             ...prevForm,
@@ -51,12 +47,16 @@ const NotesEditForm = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        dispatch(updateNote(form));
-        dispatch(setMode('view'));
+        const noteToSubmit: Note = {
+            ...form,
+            id: mode === 'add' ? Date.now().toString() : form.id,
+        };
+
+        onSubmit(noteToSubmit);
     };
 
     return (
-        <div className={styles.editForm}>
+        <div className={styles.formWrapper}>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -72,11 +72,13 @@ const NotesEditForm = () => {
                     placeholder="Note..."
                 />
                 <div className={styles.tagsContainer}>
-                    {(['shopping', 'business', 'other'] as string[]).map((item) => (
+                    {(['shopping', 'business', 'other'] as CategoryFilter[]).map((item) => (
                         <div
                             key={item}
-                            className={`${styles.tag} ${styles[item]} ${form.category?.includes(item) ? styles.active : ''}`}
-                            onClick={() => handleCategoryToggle(item as CategoryFilter)}
+                            className={`${styles.tag} ${styles[item]} ${
+                                form.category?.includes(item) ? styles.active : ''
+                            }`}
+                            onClick={() => handleCategoryToggle(item)}
                         >
                             {item}
                         </div>
@@ -86,10 +88,7 @@ const NotesEditForm = () => {
                     <button type="submit" className={styles.saveButton}>
                         Save
                     </button>
-                    <button
-                        onClick={() => dispatch(setMode('view'))}
-                        className={styles.cancelButton}
-                    >
+                    <button type="button" onClick={onCancel} className={styles.cancelButton}>
                         Cancel
                     </button>
                 </div>
@@ -98,4 +97,4 @@ const NotesEditForm = () => {
     );
 };
 
-export default NotesEditForm;
+export default NoteForm;

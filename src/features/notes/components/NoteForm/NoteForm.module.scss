@@ -1,6 +1,6 @@
 @use '../../../../styles/variables.scss';
 
-.addForm {
+.formWrapper {
     form {
         display: flex;
         flex-direction: column;
@@ -13,6 +13,10 @@
         background-color: white;
         border: 1px solid rgb(238, 238, 238);
         padding: 10px;
+    }
+
+    textArea {
+        min-height: 200px;
     }
 }
 
@@ -50,6 +54,7 @@
     border-radius: 20px;
     cursor: pointer;
     border: 2px solid transparent;
+
     &.shopping {
         background-color: variables.$purple;
     }

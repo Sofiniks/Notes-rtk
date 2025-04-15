@@ -1,19 +1,31 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { updateVisibleNotes, setMode, toggleCategoryFilter } from '../../features/notes/notesSlice';
-import { selectedCategoryFilter, selectMode } from '../../features/notes/notesSelectors';
+import {
+    updateVisibleNotes,
+    setMode,
+    toggleCategoryFilter,
+    addNote,
+    updateNote,
+} from '../../features/notes/notesSlice';
+import {
+    selectedCategoryFilter,
+    selectMode,
+    selectEditingNoteId,
+    selectNoteById,
+} from '../../features/notes/notesSelectors';
 import styles from './ComponentLayout.module.scss';
+import NoteForm from '../../features/notes/components/NoteForm/NoteForm';
 import Tagbar from '../../features/notes/components/Tagbar/Tagbar';
 import Sidebar from '../Sidebar/Sidebar';
 import NotesList from '../../features/notes/components/NotesList/NotesList';
-import NotesAddForm from '../../features/notes/components/NotesAddForm/NotesAddForm';
-import NotesEditForm from '../../features/notes/components/EditNoteForm/EditNoteForm';
 import IconButton from '../ui/IconButton/IconButton';
-import { CategoryFilter } from '../../features/notes/types';
+import { CategoryFilter, Note } from '../../features/notes/types';
 
 const ComponentLayout = () => {
     const dispatch = useAppDispatch();
     const mode = useAppSelector(selectMode);
+    const editingId = useAppSelector(selectEditingNoteId);
+    const editingNote = useAppSelector(selectNoteById(editingId || ''));
     const selectedTags = useAppSelector(selectedCategoryFilter);
     const tags = ['shopping', 'business', 'other'];
 
@@ -26,9 +38,32 @@ const ComponentLayout = () => {
         dispatch(toggleCategoryFilter(tag));
     };
 
+    const handleCancel = () => dispatch(setMode('view'));
+
+    const handleAdd = (note: Note) => {
+        dispatch(addNote(note));
+        handleCancel();
+    };
+
+    const handleEdit = (note: Note) => {
+        dispatch(updateNote(note));
+        handleCancel();
+    };
+
     const renderMainContent = () => {
-        if (mode === 'add') return <NotesAddForm />;
-        if (mode === 'edit') return <NotesEditForm />;
+        if (mode === 'add') {
+            return <NoteForm mode="add" onSubmit={handleAdd} onCancel={handleCancel} />;
+        }
+        if (mode === 'edit' && editingNote) {
+            return (
+                <NoteForm
+                    mode="edit"
+                    initialData={editingNote}
+                    onSubmit={handleEdit}
+                    onCancel={handleCancel}
+                />
+            );
+        }
         return <NotesList />;
     };
 
