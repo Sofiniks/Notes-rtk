@@ -10,28 +10,21 @@ export const filterVisibleNotes = (
     const isTrash = sectionFilter === 'trash';
     const isFavorites = sectionFilter === 'favorites';
 
-    let base = isTrash ? trash : notes;
+    const query = searchQuery?.toLowerCase() || '';
 
-    if (isFavorites && !isTrash) {
-        base = base.filter((note) => note.isFavorite);
-    }
-
-    if (categoryFilter.length > 0) {
-        base = base.filter((note) =>
-            categoryFilter.some((filter) => note.category?.includes(filter)),
+    return (isTrash ? trash : notes)
+        .filter((note) => !isFavorites || note.isFavorite)
+        .filter((note) =>
+            categoryFilter.length === 0
+                ? true
+                : categoryFilter.some((filter) => note.category?.includes(filter)),
+        )
+        .filter((note) =>
+            query === ''
+                ? true
+                : note.heading.toLowerCase().includes(query) ||
+                  note.text.toLowerCase().includes(query),
         );
-    }
-
-    if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        base = base.filter(
-            (note) =>
-                note.heading.toLowerCase().includes(query) ||
-                note.text.toLowerCase().includes(query),
-        );
-    }
-
-    return base;
 };
 
 export const getColor = (category: string) => {

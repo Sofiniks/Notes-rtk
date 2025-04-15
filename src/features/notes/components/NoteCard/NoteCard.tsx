@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '../../../../app/hooks';
 import { Note, SectionFilter } from '../../types';
 import { SECTION_FILTERS } from '../../constants';
 import IconButton from '../../../../components/ui/IconButton/IconButton';
-import { moveToTrash, toggleFavorite, deleteNote, setEditMode } from '../../notesSlice';
+import { moveToTrash, toggleFavorite, deleteNote, startEditNote } from '../../notesSlice';
 import { selectNotesSection } from '../../notesSelectors';
 import { getStripeBackground } from '../../utils';
 
@@ -32,7 +32,7 @@ const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
     return (
         <div
             className={styles.noteCard}
-            onClick={() => dispatch(setEditMode(id))}
+            onClick={() => dispatch(startEditNote(id))}
             style={{
                 ['--tag-stripe' as any]: getStripeBackground(category || []),
             }}

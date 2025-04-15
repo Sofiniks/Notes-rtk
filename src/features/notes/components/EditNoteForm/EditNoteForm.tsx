@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import styles from './EditNoteForm.module.scss';
 import { Note, CategoryFilter } from '../../types';
-import { exitEditMode, updateNote } from '../../notesSlice';
+import { setMode, updateNote } from '../../notesSlice';
 import { selectEditingNoteId, selectNoteById } from '../../notesSelectors';
 
 const NotesEditForm = () => {
@@ -52,7 +52,7 @@ const NotesEditForm = () => {
         e.preventDefault();
 
         dispatch(updateNote(form));
-        dispatch(exitEditMode());
+        dispatch(setMode('view'));
     };
 
     return (
@@ -87,7 +87,7 @@ const NotesEditForm = () => {
                         Save
                     </button>
                     <button
-                        onClick={() => dispatch(exitEditMode())}
+                        onClick={() => dispatch(setMode('view'))}
                         className={styles.cancelButton}
                     >
                         Cancel

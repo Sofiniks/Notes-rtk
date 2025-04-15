@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppDispatch } from '../../../../app/hooks';
 import styles from './NotesAddForm.module.scss';
 import { CategoryFilter, Note } from '../../types';
-import { addNote, toggleAddNoteMode } from '../../notesSlice';
+import { addNote, setMode } from '../../notesSlice';
 
 const NotesAddForm = () => {
     const dispatch = useAppDispatch();
@@ -46,7 +46,7 @@ const NotesAddForm = () => {
             isFavorite: false,
         };
         dispatch(addNote(newNote));
-        dispatch(toggleAddNoteMode(false));
+        dispatch(setMode('view'));
     };
 
     return (
@@ -82,7 +82,7 @@ const NotesAddForm = () => {
                         Save
                     </button>
                     <button
-                        onClick={() => dispatch(toggleAddNoteMode(false))}
+                        onClick={() => dispatch(setMode('view'))}
                         className={styles.cancelButton}
                     >
                         Cancel

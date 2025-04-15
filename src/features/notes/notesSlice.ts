@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { Note, SectionFilter, CategoryFilter } from './types';
+import { Note, SectionFilter, CategoryFilter, Mode } from './types';
 import { filterVisibleNotes } from './utils';
 import { notesData } from './notesData';
 
@@ -10,8 +10,7 @@ interface NotesState {
     trash: Note[];
     sectionFilter: SectionFilter;
     categoryFilter: CategoryFilter[];
-    isAdding: boolean;
-    isEdit: boolean;
+    mode: Mode;
     editingNoteId: string | null;
     searchQuery: string | null;
 }
@@ -21,8 +20,7 @@ export const initialState: NotesState = {
     sectionFilter: 'all',
     categoryFilter: [],
     trash: [],
-    isAdding: false,
-    isEdit: false,
+    mode: 'view',
     editingNoteId: null,
     searchQuery: '',
 };
@@ -82,8 +80,9 @@ export const notesSlice = createSlice({
             state.trash = state.trash.filter((note) => note.id !== noteId);
             updateVisible(state);
         },
-        toggleAddNoteMode: (state, action: PayloadAction<boolean>) => {
-            state.isAdding = action.payload;
+        setMode: (state, action: PayloadAction<'view' | 'add' | 'edit'>) => {
+            state.mode = action.payload;
+            if (action.payload !== 'edit') state.editingNoteId = null;
         },
         updateNote: (state, action: PayloadAction<Note>) => {
             const index = state.notes.findIndex((note) => note.id === action.payload.id);
@@ -92,14 +91,9 @@ export const notesSlice = createSlice({
             }
             updateVisible(state);
         },
-        setEditMode: (state, action: PayloadAction<string>) => {
-            state.isEdit = true;
+        startEditNote: (state, action: PayloadAction<string>) => {
+            state.mode = 'edit';
             state.editingNoteId = action.payload;
-            state.isAdding = false;
-        },
-        exitEditMode: (state) => {
-            state.isEdit = false;
-            state.editingNoteId = null;
         },
         setSearchQuery: (state, action: PayloadAction<string>) => {
             state.searchQuery = action.payload;
@@ -119,12 +113,11 @@ export const {
     toggleCategoryFilter,
     moveToTrash,
     deleteNote,
-    toggleAddNoteMode,
-    setEditMode,
-    exitEditMode,
+    startEditNote,
     updateNote,
     setSearchQuery,
     resetCategoryFilters,
+    setMode,
 } = notesSlice.actions;
 
 export default notesSlice.reducer;

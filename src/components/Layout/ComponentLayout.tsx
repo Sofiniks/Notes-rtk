@@ -1,27 +1,34 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { toggleAddNoteMode, updateVisibleNotes } from '../../features/notes/notesSlice';
+import { updateVisibleNotes, setMode, toggleCategoryFilter } from '../../features/notes/notesSlice';
+import { selectedCategoryFilter, selectMode } from '../../features/notes/notesSelectors';
 import styles from './ComponentLayout.module.scss';
 import Tagbar from '../../features/notes/components/Tagbar/Tagbar';
 import Sidebar from '../Sidebar/Sidebar';
 import NotesList from '../../features/notes/components/NotesList/NotesList';
 import NotesAddForm from '../../features/notes/components/NotesAddForm/NotesAddForm';
-import IconButton from '../ui/IconButton/IconButton';
-import { selectIsAddingMode, selectIsEditMode } from '../../features/notes/notesSelectors';
 import NotesEditForm from '../../features/notes/components/EditNoteForm/EditNoteForm';
+import IconButton from '../ui/IconButton/IconButton';
+import { CategoryFilter } from '../../features/notes/types';
 
 const ComponentLayout = () => {
     const dispatch = useAppDispatch();
-    const isAddMode = useAppSelector(selectIsAddingMode);
-    const isEditMode = useAppSelector(selectIsEditMode);
+    const mode = useAppSelector(selectMode);
+    const selectedTags = useAppSelector(selectedCategoryFilter);
+    const tags = ['shopping', 'business', 'other'];
 
     useEffect(() => {
         dispatch(updateVisibleNotes());
     }, [dispatch]);
 
+    const handleTagClick = (tag: CategoryFilter) => {
+        dispatch(setMode('view'));
+        dispatch(toggleCategoryFilter(tag));
+    };
+
     const renderMainContent = () => {
-        if (isAddMode) return <NotesAddForm />;
-        if (isEditMode) return <NotesEditForm />;
+        if (mode === 'add') return <NotesAddForm />;
+        if (mode === 'edit') return <NotesEditForm />;
         return <NotesList />;
     };
 
@@ -34,9 +41,13 @@ const ComponentLayout = () => {
                         <IconButton
                             iconName="plus"
                             ariaLabel="Create note"
-                            onClick={() => dispatch(toggleAddNoteMode(true))}
+                            onClick={() => dispatch(setMode('add'))}
                         />
-                        <Tagbar />
+                        <Tagbar
+                            tags={tags as CategoryFilter[]}
+                            selectedTags={selectedTags}
+                            onTagClick={handleTagClick}
+                        />
                     </div>
                     {renderMainContent()}
                 </div>

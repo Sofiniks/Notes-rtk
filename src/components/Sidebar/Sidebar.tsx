@@ -2,9 +2,8 @@ import { FiTrash, FiFileText, FiStar } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import styles from './Sidebar.module.scss';
 import {
-    exitEditMode,
+    setMode,
     setSectionFilter,
-    toggleAddNoteMode,
     setSearchQuery,
     resetCategoryFilters,
 } from '../../features/notes/notesSlice';
@@ -33,9 +32,7 @@ const Sidebar = () => {
     const searchQuery = useAppSelector(selectSearchQuery);
 
     const handleSelectSection = (section: SectionFilter) => {
-        dispatch(toggleAddNoteMode(false));
-        dispatch(exitEditMode());
-        dispatch(resetCategoryFilters());
+        dispatch(setMode('view')), dispatch(resetCategoryFilters());
         dispatch(setSectionFilter(section));
     };
 
