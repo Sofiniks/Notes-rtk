@@ -1,10 +1,12 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import { Note, SectionFilter, CategoryFilter } from './types';
+import { filterVisibleNotes } from './utils';
 import { notesData } from './notesData';
 
 interface NotesState {
     notes: Note[];
+    visibleNotes: Note[];
     trash: Note[];
     sectionFilter: SectionFilter;
     categoryFilter: CategoryFilter[];
@@ -15,6 +17,7 @@ interface NotesState {
 }
 export const initialState: NotesState = {
     notes: notesData,
+    visibleNotes: [],
     sectionFilter: 'all',
     categoryFilter: [],
     trash: [],
@@ -24,21 +27,37 @@ export const initialState: NotesState = {
     searchQuery: '',
 };
 
+const updateVisible = (state: NotesState) => {
+    state.visibleNotes = filterVisibleNotes(
+        state.notes,
+        state.trash,
+        state.sectionFilter,
+        state.categoryFilter,
+        state.searchQuery,
+    );
+};
+
 export const notesSlice = createSlice({
     name: 'notes',
     initialState,
     reducers: {
+        updateVisibleNotes: (state) => {
+            updateVisible(state);
+        },
         addNote: (state, action: PayloadAction<Note>) => {
             state.notes.push(action.payload);
+            updateVisible(state);
         },
         toggleFavorite: (state, action: PayloadAction<string>) => {
             const note = state.notes.find((note) => note.id === action.payload);
             if (note) {
                 note.isFavorite = !note.isFavorite;
             }
+            updateVisible(state);
         },
         setSectionFilter: (state, action: PayloadAction<SectionFilter>) => {
             state.sectionFilter = action.payload;
+            updateVisible(state);
         },
         toggleCategoryFilter: (state, action: PayloadAction<CategoryFilter>) => {
             const category = action.payload;
@@ -47,6 +66,7 @@ export const notesSlice = createSlice({
             } else {
                 state.categoryFilter.push(category);
             }
+            updateVisible(state);
         },
         moveToTrash: (state, action: PayloadAction<string>) => {
             const noteId = action.payload;
@@ -55,10 +75,12 @@ export const notesSlice = createSlice({
                 state.notes = state.notes.filter((note) => note.id !== noteId);
                 state.trash.push(note);
             }
+            updateVisible(state);
         },
         deleteNote: (state, action: PayloadAction<string>) => {
             const noteId = action.payload;
             state.trash = state.trash.filter((note) => note.id !== noteId);
+            updateVisible(state);
         },
         toggleAddNoteMode: (state, action: PayloadAction<boolean>) => {
             state.isAdding = action.payload;
@@ -68,6 +90,7 @@ export const notesSlice = createSlice({
             if (index !== -1) {
                 state.notes[index] = action.payload;
             }
+            updateVisible(state);
         },
         setEditMode: (state, action: PayloadAction<string>) => {
             state.isEdit = true;
@@ -80,6 +103,7 @@ export const notesSlice = createSlice({
         },
         setSearchQuery: (state, action: PayloadAction<string>) => {
             state.searchQuery = action.payload;
+            updateVisible(state);
         },
         resetCategoryFilters: (state) => {
             state.categoryFilter = [];
@@ -88,6 +112,7 @@ export const notesSlice = createSlice({
 });
 
 export const {
+    updateVisibleNotes,
     addNote,
     toggleFavorite,
     setSectionFilter,

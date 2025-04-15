@@ -1,3 +1,39 @@
+import { Note, SectionFilter, CategoryFilter } from './types';
+
+export const filterVisibleNotes = (
+    notes: Note[],
+    trash: Note[],
+    sectionFilter: SectionFilter,
+    categoryFilter: CategoryFilter[],
+    searchQuery: string | null,
+): Note[] => {
+    const isTrash = sectionFilter === 'trash';
+    const isFavorites = sectionFilter === 'favorites';
+
+    let base = isTrash ? trash : notes;
+
+    if (isFavorites && !isTrash) {
+        base = base.filter((note) => note.isFavorite);
+    }
+
+    if (categoryFilter.length > 0) {
+        base = base.filter((note) =>
+            categoryFilter.some((filter) => note.category?.includes(filter)),
+        );
+    }
+
+    if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        base = base.filter(
+            (note) =>
+                note.heading.toLowerCase().includes(query) ||
+                note.text.toLowerCase().includes(query),
+        );
+    }
+
+    return base;
+};
+
 export const getColor = (category: string) => {
     switch (category) {
         case 'shopping':
@@ -23,6 +59,6 @@ export const getStripeBackground = (categories: string[]) => {
         const to = step * (index + 1);
         return [`${color} ${from}%`, `${color} ${to}%`];
     });
-    console.log(`linear-gradient(to bottom, ${colorStops.join(', ')})`);
+
     return `linear-gradient(to bottom, ${colorStops.join(', ')})`;
 };

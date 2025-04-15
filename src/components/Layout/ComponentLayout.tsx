@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { toggleAddNoteMode } from '../../features/notes/notesSlice';
+import { toggleAddNoteMode, updateVisibleNotes } from '../../features/notes/notesSlice';
 import styles from './ComponentLayout.module.scss';
 import Tagbar from '../../features/notes/components/Tagbar/Tagbar';
 import Sidebar from '../Sidebar/Sidebar';
@@ -13,6 +14,10 @@ const ComponentLayout = () => {
     const dispatch = useAppDispatch();
     const isAddMode = useAppSelector(selectIsAddingMode);
     const isEditMode = useAppSelector(selectIsEditMode);
+
+    useEffect(() => {
+        dispatch(updateVisibleNotes());
+    }, [dispatch]);
 
     const renderMainContent = () => {
         if (isAddMode) return <NotesAddForm />;
