@@ -10,3 +10,5 @@ export const CATEGORY_FILTERS = {
     BUSINESS: 'business',
     OTHER: 'other',
 };
+
+export const BASE_TAGS = ['shopping', 'business', 'other'];

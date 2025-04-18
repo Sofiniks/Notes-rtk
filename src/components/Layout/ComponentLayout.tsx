@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
     updateVisibleNotes,
@@ -6,17 +6,20 @@ import {
     toggleCategoryFilter,
     addNote,
     updateNote,
+    addCustomTag,
 } from '../../features/notes/notesSlice';
 import {
     selectedCategoryFilter,
     selectMode,
     selectEditingNoteId,
     selectNoteById,
+    selectAllTags,
 } from '../../features/notes/notesSelectors';
 import styles from './ComponentLayout.module.scss';
 import NoteForm from '../../features/notes/components/NoteForm/NoteForm';
 import Tagbar from '../../features/notes/components/Tagbar/Tagbar';
 import Sidebar from '../Sidebar/Sidebar';
+import AddTagModal from '../../features/notes/components/AddTagModal/AddTagModal';
 import NotesList from '../../features/notes/components/NotesList/NotesList';
 import IconButton from '../ui/IconButton/IconButton';
 import { CategoryFilter, Note } from '../../features/notes/types';
@@ -27,11 +30,17 @@ const ComponentLayout = () => {
     const editingId = useAppSelector(selectEditingNoteId);
     const editingNote = useAppSelector(selectNoteById(editingId || ''));
     const selectedTags = useAppSelector(selectedCategoryFilter);
-    const tags = ['shopping', 'business', 'other'];
+    const allTags = useAppSelector(selectAllTags);
+    const [isModalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         dispatch(updateVisibleNotes());
     }, [dispatch]);
+
+    const handleAddCustomTag = (tagName: string) => {
+        dispatch(addCustomTag(tagName));
+        setModalOpen(false);
+    };
 
     const handleTagClick = (tag: CategoryFilter) => {
         dispatch(setMode('view'));
@@ -79,13 +88,21 @@ const ComponentLayout = () => {
                             onClick={() => dispatch(setMode('add'))}
                         />
                         <Tagbar
-                            tags={tags as CategoryFilter[]}
+                            tags={allTags}
                             selectedTags={selectedTags}
                             onTagClick={handleTagClick}
                         />
+                        <button onClick={() => setModalOpen(true)} className={styles.addTagButton}>
+                            add category
+                        </button>
                     </div>
                     {renderMainContent()}
                 </div>
+                <AddTagModal
+                    isOpen={isModalOpen}
+                    onClose={() => setModalOpen(false)}
+                    onSubmit={handleAddCustomTag}
+                />
             </div>
         </div>
     );

@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
 export const selectAllNotes = (state: RootState) => state.notes.notes;
@@ -9,3 +10,10 @@ export const selectNotesSection = (state: RootState) => state.notes.sectionFilte
 export const selectMode = (state: RootState) => state.notes.mode;
 export const selectSearchQuery = (state: RootState) => state.notes.searchQuery;
 export const selectedCategoryFilter = (state: RootState) => state.notes.categoryFilter;
+export const selectBaseTags = (state: RootState) => state.notes.baseTags;
+export const selectCustomTags = (state: RootState) => state.notes.customTags;
+
+export const selectAllTags = createSelector([selectBaseTags, selectCustomTags], (base, custom) => [
+    ...base,
+    ...custom,
+]);

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { Note, SectionFilter, CategoryFilter, Mode } from './types';
 import { filterVisibleNotes } from './utils';
 import { notesData } from './notesData';
+import { BASE_TAGS } from './constants';
 
 interface NotesState {
     notes: Note[];
@@ -10,6 +11,8 @@ interface NotesState {
     trash: Note[];
     sectionFilter: SectionFilter;
     categoryFilter: CategoryFilter[];
+    baseTags: CategoryFilter[];
+    customTags: CategoryFilter[];
     mode: Mode;
     editingNoteId: string | null;
     searchQuery: string | null;
@@ -19,6 +22,8 @@ export const initialState: NotesState = {
     visibleNotes: [],
     sectionFilter: 'all',
     categoryFilter: [],
+    baseTags: [...BASE_TAGS],
+    customTags: [],
     trash: [],
     mode: 'view',
     editingNoteId: null,
@@ -66,6 +71,13 @@ export const notesSlice = createSlice({
             }
             updateVisible(state);
         },
+        addCustomTag: (state, action: PayloadAction<string>) => {
+            const newTag = action.payload.trim().toLowerCase();
+            const allTags = [...state.baseTags, ...state.customTags];
+            if (newTag && !allTags.includes(newTag)) {
+                state.customTags.push(newTag);
+            }
+        },
         moveToTrash: (state, action: PayloadAction<string>) => {
             const noteId = action.payload;
             const note = state.notes.find((note) => note.id === noteId);
@@ -111,6 +123,7 @@ export const {
     toggleFavorite,
     setSectionFilter,
     toggleCategoryFilter,
+    addCustomTag,
     moveToTrash,
     deleteNote,
     startEditNote,

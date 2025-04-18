@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useAppSelector } from '../../../../app/hooks';
+import { selectAllTags } from '../../notesSelectors';
 import styles from './NoteForm.module.scss';
 import { Note, CategoryFilter } from '../../types';
 
@@ -17,6 +19,7 @@ const NoteForm = ({ mode, initialData, onSubmit, onCancel }: NoteFormProps) => {
         category: [],
         isFavorite: false,
     });
+    const allTags = useAppSelector(selectAllTags);
 
     useEffect(() => {
         if (mode === 'edit' && initialData) {
@@ -72,7 +75,7 @@ const NoteForm = ({ mode, initialData, onSubmit, onCancel }: NoteFormProps) => {
                     placeholder="Note..."
                 />
                 <div className={styles.tagsContainer}>
-                    {(['shopping', 'business', 'other'] as CategoryFilter[]).map((item) => (
+                    {allTags.map((item) => (
                         <div
                             key={item}
                             className={`${styles.tag} ${styles[item]} ${

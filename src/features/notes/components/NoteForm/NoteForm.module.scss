@@ -48,19 +48,22 @@
 }
 
 .tag {
-    background-color: variables.$primary-blue;
+    background-color: lightgray;
     color: #fff;
     padding: 5px 15px;
     border-radius: 20px;
     cursor: pointer;
     border: 2px solid transparent;
-
     &.shopping {
         background-color: variables.$purple;
     }
 
     &.business {
         background-color: variables.$orange;
+    }
+
+    &.other {
+        background-color: variables.$primary-blue;
     }
 
     &.active {
