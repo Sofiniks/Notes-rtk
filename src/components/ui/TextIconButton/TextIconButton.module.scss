@@ -1,0 +1,24 @@
+@use '../../../styles/variables.scss';
+
+.iconButton {
+    background-color: #7167e9;
+    border-radius: 8px;
+    padding: 7px 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    max-height: 30px;
+    white-space: nowrap;
+    max-width: fit-content;
+    transition: 0.3s;
+    &:hover {
+        background-color: #a39deb;
+    }
+}
+
+.icon {
+    color: #fff;
+}

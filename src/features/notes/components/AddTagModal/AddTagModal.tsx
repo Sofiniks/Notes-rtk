@@ -4,16 +4,28 @@ import styles from './AddTagModal.module.scss';
 type AddTagModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (tagName: string) => void;
+    onSubmit: (tagName: string, tagColor: string) => void;
 };
+
+const COLORS = [
+    '#9b59b6',
+    '#60c1ff',
+    '#ffaa64',
+    '#ff7676',
+    '#74df90',
+    '#ffe073',
+    '#a390ff',
+    '#ffa9d4',
+];
 
 const AddTagModal = ({ isOpen, onClose, onSubmit }: AddTagModalProps) => {
     const [inputValue, setInputValue] = useState('');
+    const [selectedColor, setSelectedColor] = useState(COLORS[0]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!inputValue.trim()) return;
-        onSubmit(inputValue.trim());
+        onSubmit(inputValue.trim().toLowerCase(), selectedColor);
         setInputValue('');
         onClose();
     };
@@ -23,15 +35,27 @@ const AddTagModal = ({ isOpen, onClose, onSubmit }: AddTagModalProps) => {
     return (
         <div className={styles.overlay}>
             <div className={styles.modal}>
-                <h3 className={styles.title}>Создать тег</h3>
+                <h3 className={styles.title}>Add name & chose color</h3>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Enter name of tag"
+                        placeholder="Enter tag's name"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         className={styles.input}
                     />
+
+                    <div className={styles.colors}>
+                        {COLORS.map((color) => (
+                            <div
+                                key={color}
+                                className={`${styles.colorCircle} ${selectedColor === color ? styles.selected : ''}`}
+                                style={{ backgroundColor: color }}
+                                onClick={() => setSelectedColor(color)}
+                            />
+                        ))}
+                    </div>
+
                     <div className={styles.buttonGroup}>
                         <button type="button" onClick={onClose} className={styles.cancel}>
                             Cancel

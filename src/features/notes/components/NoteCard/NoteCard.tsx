@@ -1,13 +1,21 @@
 import styles from './NoteCard.module.scss';
 import { useAppSelector, useAppDispatch } from '../../../../app/hooks';
-import { Note, SectionFilter } from '../../types';
+import { SectionFilter } from '../../types';
 import { SECTION_FILTERS } from '../../constants';
 import IconButton from '../../../../components/ui/IconButton/IconButton';
 import { moveToTrash, toggleFavorite, deleteNote, startEditNote } from '../../notesSlice';
 import { selectNotesSection } from '../../notesSelectors';
 import { getStripeBackground } from '../../utils';
 
-const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
+type NoteCardProps = {
+    id: string;
+    heading: string;
+    text: string;
+    isFavorite?: boolean;
+    tagColors: string[];
+};
+
+const NotesCard = ({ id, heading, text, isFavorite, tagColors }: NoteCardProps) => {
     const dispatch = useAppDispatch();
     const currentSection = useAppSelector(selectNotesSection);
 
@@ -34,7 +42,7 @@ const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
             className={styles.noteCard}
             onClick={() => dispatch(startEditNote(id))}
             style={{
-                ['--tag-stripe' as any]: getStripeBackground(category || []),
+                ['--tag-stripe' as any]: getStripeBackground(tagColors),
             }}
         >
             <div className={styles.noteCardHeader}>

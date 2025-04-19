@@ -20,6 +20,7 @@ store.subscribe(() => {
     saveState({
         notes: store.getState().notes.notes,
         trash: store.getState().notes.trash,
+        customTags: store.getState().notes.customTags,
     });
 });
 

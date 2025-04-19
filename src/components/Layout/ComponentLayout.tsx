@@ -21,8 +21,8 @@ import Tagbar from '../../features/notes/components/Tagbar/Tagbar';
 import Sidebar from '../Sidebar/Sidebar';
 import AddTagModal from '../../features/notes/components/AddTagModal/AddTagModal';
 import NotesList from '../../features/notes/components/NotesList/NotesList';
-import IconButton from '../ui/IconButton/IconButton';
-import { CategoryFilter, Note } from '../../features/notes/types';
+import TextIconButton from '../ui/TextIconButton/TextIconButton';
+import { CategoryFilter, Note, Tag } from '../../features/notes/types';
 
 const ComponentLayout = () => {
     const dispatch = useAppDispatch();
@@ -37,8 +37,8 @@ const ComponentLayout = () => {
         dispatch(updateVisibleNotes());
     }, [dispatch]);
 
-    const handleAddCustomTag = (tagName: string) => {
-        dispatch(addCustomTag(tagName));
+    const handleAddCustomTag = (tagName: string, tagColor: string) => {
+        dispatch(addCustomTag({ name: tagName, color: tagColor }));
         setModalOpen(false);
     };
 
@@ -82,19 +82,26 @@ const ComponentLayout = () => {
                 <Sidebar />
                 <div className={styles.mainContent}>
                     <div className={styles.topBar}>
-                        <IconButton
-                            iconName="plus"
-                            ariaLabel="Create note"
-                            onClick={() => dispatch(setMode('add'))}
-                        />
+                        <div className={styles.categoryTop}>
+                            <h3>Categories</h3>
+                            <TextIconButton
+                                iconName="plus"
+                                ariaLabel="Create category"
+                                text="Add category"
+                                onClick={() => setModalOpen(true)}
+                            />
+                        </div>
                         <Tagbar
                             tags={allTags}
                             selectedTags={selectedTags}
                             onTagClick={handleTagClick}
                         />
-                        <button onClick={() => setModalOpen(true)} className={styles.addTagButton}>
-                            add category
-                        </button>
+                        <TextIconButton
+                            iconName="plus"
+                            ariaLabel="Create note"
+                            text="Create note"
+                            onClick={() => dispatch(setMode('add'))}
+                        />
                     </div>
                     {renderMainContent()}
                 </div>
