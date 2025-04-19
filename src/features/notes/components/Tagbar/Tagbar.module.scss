@@ -1,8 +1,11 @@
 @use '../../../../styles/variables.scss';
 .tagbar {
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 10px;
+    overflow-x: scroll;
+    max-width: 100%;
+    width: 100%;
+    padding: 10px 0;
 }
 
 .tag {
@@ -12,17 +15,11 @@
     border-radius: 20px;
     cursor: pointer;
     border: 2px solid transparent;
-    &.shopping {
-        background-color: variables.$purple;
-    }
-
-    &.business {
-        background-color: variables.$orange;
-    }
-
-    &.other {
-        background-color: variables.$primary-blue;
-    }
+    min-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    width: auto;
+    flex-shrink: 0;
 
     &.active {
         border: 2px solid #e7e5e5;

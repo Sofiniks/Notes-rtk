@@ -1,40 +1,33 @@
 import styles from './NoteCard.module.scss';
-import { useAppSelector, useAppDispatch } from '../../../../app/hooks';
-import { Note, SectionFilter } from '../../types';
-import { SECTION_FILTERS } from '../../constants';
 import IconButton from '../../../../components/ui/IconButton/IconButton';
-import { moveToTrash, toggleFavorite, deleteNote, startEditNote } from '../../notesSlice';
-import { selectNotesSection } from '../../notesSelectors';
 import { getStripeBackground } from '../../utils';
 
-const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
-    const dispatch = useAppDispatch();
-    const currentSection = useAppSelector(selectNotesSection);
+type NoteCardProps = {
+    id: string;
+    heading: string;
+    text: string;
+    isFavorite?: boolean;
+    tagColors: string[];
+    onDelete: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    onToggleFavorite: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    onClick: () => void;
+};
 
-    const handleDelete = (
-        e: React.MouseEvent<HTMLButtonElement>,
-        id: string,
-        section: SectionFilter,
-    ) => {
-        e.stopPropagation();
-        if (section === SECTION_FILTERS.TRASH) {
-            dispatch(deleteNote(id));
-        } else {
-            dispatch(moveToTrash(id));
-        }
-    };
-
-    const handleToggleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-        e.stopPropagation();
-        dispatch(toggleFavorite(id));
-    };
-
+const NotesCard = ({
+    heading,
+    text,
+    isFavorite,
+    tagColors,
+    onDelete,
+    onToggleFavorite,
+    onClick,
+}: NoteCardProps) => {
     return (
         <div
             className={styles.noteCard}
-            onClick={() => dispatch(startEditNote(id))}
+            onClick={onClick}
             style={{
-                ['--tag-stripe' as any]: getStripeBackground(category || []),
+                ['--tag-stripe' as any]: getStripeBackground(tagColors),
             }}
         >
             <div className={styles.noteCardHeader}>
@@ -42,15 +35,11 @@ const NotesCard = ({ id, heading, text, isFavorite, category }: Note) => {
                 <div className={styles.actionButtons}>
                     <IconButton
                         iconName="star"
-                        onClick={(e) => handleToggleFavorite(e, id)}
+                        onClick={onToggleFavorite}
                         isActive={isFavorite}
                         ariaLabel="Add to favorites"
                     />
-                    <IconButton
-                        iconName="trash"
-                        onClick={(e) => handleDelete(e, id, currentSection)}
-                        ariaLabel="Delete note"
-                    />
+                    <IconButton iconName="trash" onClick={onDelete} ariaLabel="Delete note" />
                 </div>
             </div>
             <p className={styles.noteText}>{text}</p>

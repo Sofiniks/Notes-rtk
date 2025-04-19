@@ -1,21 +1,23 @@
 import { MouseEventHandler } from 'react';
 import { iconMap, IconName } from '../iconMap';
-import styles from './IconButton.module.scss';
+import styles from './TextIconButton.module.scss';
 
 type IconButtonProps = {
     iconName: IconName;
     isActive?: boolean;
     ariaLabel?: string;
+    text?: string;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-const IconButton = ({ iconName, isActive, ariaLabel, onClick }: IconButtonProps) => {
+const TextIconButton = ({ iconName, isActive, text, ariaLabel, onClick }: IconButtonProps) => {
     const Icon = isActive ? iconMap[iconName].active : iconMap[iconName].default;
     return (
         <button className={styles.iconButton} title={ariaLabel} onClick={onClick}>
             <Icon className={styles.icon} />
+            {text && text}
         </button>
     );
 };
 
-export default IconButton;
+export default TextIconButton;

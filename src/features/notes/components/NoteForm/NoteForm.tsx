@@ -75,15 +75,16 @@ const NoteForm = ({ mode, initialData, onSubmit, onCancel }: NoteFormProps) => {
                     placeholder="Note..."
                 />
                 <div className={styles.tagsContainer}>
-                    {allTags.map((item) => (
+                    {allTags.map(({ name, color }) => (
                         <div
-                            key={item}
-                            className={`${styles.tag} ${styles[item]} ${
-                                form.category?.includes(item) ? styles.active : ''
+                            key={name}
+                            style={{ backgroundColor: color }}
+                            className={`${styles.tag}  ${
+                                form.category?.includes(name) ? styles.active : ''
                             }`}
-                            onClick={() => handleCategoryToggle(item)}
+                            onClick={() => handleCategoryToggle(name)}
                         >
-                            {item}
+                            {name}
                         </div>
                     ))}
                 </div>

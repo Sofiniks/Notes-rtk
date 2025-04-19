@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { Tag } from './types';
 
 export const selectAllNotes = (state: RootState) => state.notes.notes;
 export const selectVisibleNotes = (state: RootState) => state.notes.visibleNotes;
@@ -13,7 +14,7 @@ export const selectedCategoryFilter = (state: RootState) => state.notes.category
 export const selectBaseTags = (state: RootState) => state.notes.baseTags;
 export const selectCustomTags = (state: RootState) => state.notes.customTags;
 
-export const selectAllTags = createSelector([selectBaseTags, selectCustomTags], (base, custom) => [
-    ...base,
-    ...custom,
-]);
+export const selectAllTags = createSelector(
+    [selectBaseTags, selectCustomTags],
+    (base, custom): Tag[] => [...base, ...custom],
+);

@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { Note, SectionFilter, CategoryFilter, Mode } from './types';
+import { Note, SectionFilter, CategoryFilter, Tag, Mode } from './types';
 import { filterVisibleNotes } from './utils';
 import { notesData } from './notesData';
 import { BASE_TAGS } from './constants';
@@ -10,9 +10,9 @@ interface NotesState {
     visibleNotes: Note[];
     trash: Note[];
     sectionFilter: SectionFilter;
-    categoryFilter: CategoryFilter[];
-    baseTags: CategoryFilter[];
-    customTags: CategoryFilter[];
+    categoryFilter: string[];
+    baseTags: Tag[];
+    customTags: Tag[];
     mode: Mode;
     editingNoteId: string | null;
     searchQuery: string | null;
@@ -71,13 +71,17 @@ export const notesSlice = createSlice({
             }
             updateVisible(state);
         },
-        addCustomTag: (state, action: PayloadAction<string>) => {
-            const newTag = action.payload.trim().toLowerCase();
+        addCustomTag: (state, action: PayloadAction<{ name: string; color: string }>) => {
+            const newTag = action.payload;
             const allTags = [...state.baseTags, ...state.customTags];
-            if (newTag && !allTags.includes(newTag)) {
+
+            const alreadyExists = allTags.some((tag) => tag.name === newTag.name);
+
+            if (!alreadyExists) {
                 state.customTags.push(newTag);
             }
         },
+
         moveToTrash: (state, action: PayloadAction<string>) => {
             const noteId = action.payload;
             const note = state.notes.find((note) => note.id === noteId);

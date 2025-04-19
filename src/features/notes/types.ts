@@ -8,4 +8,8 @@ export type Note = {
 
 export type Mode = 'view' | 'add' | 'edit';
 export type SectionFilter = 'all' | 'favorites' | 'trash';
+export type Tag = {
+    name: string;
+    color: string;
+};
 export type CategoryFilter = string;

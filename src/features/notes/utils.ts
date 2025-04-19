@@ -1,10 +1,10 @@
-import { Note, SectionFilter, CategoryFilter } from './types';
+import { Note, SectionFilter } from './types';
 
 export const filterVisibleNotes = (
     notes: Note[],
     trash: Note[],
     sectionFilter: SectionFilter,
-    categoryFilter: CategoryFilter[],
+    categoryFilter: string[],
     searchQuery: string | null,
 ): Note[] => {
     const isTrash = sectionFilter === 'trash';
@@ -27,31 +27,13 @@ export const filterVisibleNotes = (
         );
 };
 
-export const getColor = (category: string) => {
-    switch (category) {
-        case 'shopping':
-            return '#cc85ff';
-        case 'business':
-            return '#facd39';
-        case 'other':
-            return '#0ad4ef';
-        default:
-            return '#ccc';
-    }
-};
-
-export const getStripeBackground = (categories: string[]) => {
-    if (!Array.isArray(categories) || categories.length === 0) {
-        return '#ccc';
-    }
-
-    const step = 100 / categories.length;
-    const colorStops = categories.map((cat, index) => {
-        const color = getColor(cat);
-        const from = step * index;
-        const to = step * (index + 1);
+export const getStripeBackground = (colors: string[]) => {
+    if (!colors.length) return '#ccc';
+    const step = 100 / colors.length;
+    const colorStops = colors.flatMap((color, i) => {
+        const from = step * i;
+        const to = step * (i + 1);
         return [`${color} ${from}%`, `${color} ${to}%`];
     });
-
     return `linear-gradient(to bottom, ${colorStops.join(', ')})`;
 };

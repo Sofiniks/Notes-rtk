@@ -45,6 +45,7 @@
     display: flex;
     gap: 20px;
     margin-bottom: 40px;
+    flex-wrap: wrap;
 }
 
 .tag {
@@ -54,17 +55,9 @@
     border-radius: 20px;
     cursor: pointer;
     border: 2px solid transparent;
-    &.shopping {
-        background-color: variables.$purple;
-    }
-
-    &.business {
-        background-color: variables.$orange;
-    }
-
-    &.other {
-        background-color: variables.$primary-blue;
-    }
+    min-width: 100px;
+    white-space: nowrap;
+    text-align: center;
 
     &.active {
         border: 2px solid #e7e5e5;
